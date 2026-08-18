@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RocaRev — We Build Your Website Free. Then We Build The Engine Behind It.</title>
+<meta name="description" content="Get a custom, high-speed business website for $0 upfront. Then plug every leak with missed-call text-back, an AI chatbot, and review autopilot." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   ROCAREV — TOKENS
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --void:#0D0F12;        /* base (brief) */
+  --deck:#14181D;        /* panel */
+  --deck2:#191E24;       /* nested */
+  --rail:#232A32;        /* hairline */
+  --railHi:#333D49;
+
+  --hv:#FFC233;          /* high-vis amber — action, recovered, plugged */
+  --gold:#E0940A;        /* deep gold — gradient tail */
+  --hv8:rgba(255,194,51,.08);
+  --hv18:rgba(255,194,51,.18);
+  --hv35:rgba(255,194,51,.35);
+
+  --leak:#FF4D4D;        /* red — loss, leaks, what it costs you */
+  --leak10:rgba(255,77,77,.10);
+  --leak30:rgba(255,77,77,.30);
+
+  --chalk:#F0F3F6;
+  --silver:#8D97A3;
+  --silverDim:#626C78;
+
+  --display:'Anton', Impact, system-ui, sans-serif;
+  --body:'Inter', system-ui, -apple-system, sans-serif;
+  --mono:'Space Mono', ui-monospace, Menlo, monospace;
+
+  --shell:1220px;
+  --pad:clamp(20px,5vw,44px);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--void);color:var(--chalk);font-family:var(--body);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--hv);outline-offset:3px;border-radius:2px}
+
+/* type roles */
+.dsp{font-family:var(--display);font-weight:400;letter-spacing:-.01em;line-height:.94;text-transform:uppercase;text-wrap:balance}
+.dsp-lc{font-family:var(--display);font-weight:400;letter-spacing:-.005em;line-height:1;text-wrap:balance}
+.mn{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+
+/* layout */
+.shell{max-width:var(--shell);margin-inline:auto;padding-inline:var(--pad);position:relative;z-index:1}
+.band{padding-block:clamp(70px,9.5vw,124px);position:relative}
+.hair{border-top:1px solid var(--rail)}
+.grid-bg{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:52px 52px;
+  -webkit-mask-image:radial-gradient(115% 65% at 50% 0%,#000,transparent 70%);
+          mask-image:radial-gradient(115% 65% at 50% 0%,#000,transparent 70%)}
+
+.eyebrow{display:flex;align-items:center;gap:10px;color:var(--silverDim);margin-bottom:20px}
+.eyebrow::before{content:"";width:16px;height:2px;background:var(--hv);flex:none}
+.eyebrow.is-leak::before{background:var(--leak)}
+
+/* ══════════════════════════ NAV ══════════════════════════ */
+.nav{position:fixed;inset:0 0 auto;z-index:60;background:rgba(13,15,18,.74);
+  backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
+.nav.stuck{border-bottom-color:var(--rail);background:rgba(13,15,18,.93)}
+.nav__in{max-width:var(--shell);margin-inline:auto;padding:13px var(--pad);display:flex;align-items:center;gap:30px}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--display);font-size:22px;letter-spacing:.01em;text-transform:uppercase}
+.logo svg{width:18px;height:18px;flex:none}
+.logo em{font-style:normal;color:var(--hv)}
+.nav__links{display:flex;gap:26px;margin-left:auto}
+.nav__links a{font-size:14px;color:var(--silver);transition:color .2s}
+.nav__links a:hover{color:var(--chalk)}
+
+/* ══════════════════════════ BUTTONS ══════════════════════════ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:15px 24px;
+  border-radius:8px;font-size:15px;font-weight:600;letter-spacing:-.01em;cursor:pointer;
+  border:1px solid transparent;white-space:nowrap;
+  transition:transform .16s cubic-bezier(.2,.7,.3,1),background .2s,border-color .2s,box-shadow .25s}
+.btn svg{width:16px;height:16px}
+.btn--go{background:var(--hv);color:#1A1200;border-color:var(--hv)}
+.btn--go:hover{background:#FFD264;border-color:#FFD264;transform:translateY(-2px);box-shadow:0 12px 34px -12px var(--hv35)}
+.btn--out{background:transparent;color:var(--chalk);border-color:var(--railHi)}
+.btn--out:hover{border-color:var(--silver);background:rgba(255,255,255,.03);transform:translateY(-2px)}
+.btn--sm{padding:10px 17px;font-size:13.5px}
+.btn--wide{width:100%}
+
+/* ══════════════════════════ HERO ══════════════════════════ */
+.hero{padding-top:clamp(112px,16vw,168px);padding-bottom:clamp(56px,7vw,88px);overflow:hidden}
+.hero__glow{position:absolute;top:-300px;left:50%;transform:translateX(-50%);
+  width:min(1000px,140vw);height:660px;z-index:0;pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 50%,var(--hv18),transparent 70%);filter:blur(24px)}
+.hero__grid{display:grid;grid-template-columns:1.08fr .92fr;gap:clamp(32px,5vw,64px);align-items:center}
+
+.flag{display:inline-flex;align-items:center;gap:9px;padding:7px 13px;border-radius:999px;
+  border:1px solid var(--hv18);background:var(--hv8);color:var(--hv);margin-bottom:24px}
+.flag i{width:6px;height:6px;border-radius:50%;background:var(--hv);flex:none;
+  box-shadow:0 0 0 0 var(--hv35);animation:pip 2.2s ease-out infinite}
+@keyframes pip{0%{box-shadow:0 0 0 0 var(--hv35)}70%{box-shadow:0 0 0 8px rgba(255,194,51,0)}100%{box-shadow:0 0 0 0 rgba(255,194,51,0)}}
+
+.hero h1{margin:0 0 24px;font-size:clamp(44px,7.4vw,88px)}
+.hero h1 em{font-style:normal;color:var(--hv)}
+.hero h1 s{text-decoration:none;position:relative;color:var(--silverDim)}
+.hero h1 s::after{content:"";position:absolute;left:-2%;right:-2%;top:52%;height:5px;background:var(--leak);
+  transform:rotate(-3deg);border-radius:3px}
+.hero__sub{margin:0 0 32px;max-width:54ch;font-size:clamp(16px,1.85vw,18.5px);color:var(--silver)}
+.hero__sub b{color:var(--chalk);font-weight:500}
+.hero__cta{display:flex;flex-wrap:wrap;gap:12px}
+.hero__fine{margin:20px 0 0;color:var(--silverDim);font-size:13.5px;display:flex;flex-wrap:wrap;gap:8px 18px}
+.hero__fine span{display:flex;align-items:center;gap:7px}
+.hero__fine svg{width:14px;height:14px;color:var(--hv);flex:none}
+
+/* ── hero visual: phone + live notification stack ── */
+.stage{position:relative;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+
+.phone{width:198px;flex:none;border-radius:26px;padding:8px;background:linear-gradient(160deg,#2A323B,#141A20);
+  border:1px solid var(--railHi);box-shadow:0 40px 80px -34px #000;justify-self:end}
+.phone__scr{border-radius:19px;overflow:hidden;background:var(--void);border:1px solid #000}
+.phone__bar{display:flex;align-items:center;justify-content:space-between;padding:8px 11px;
+  border-bottom:1px solid var(--rail);font-family:var(--mono);font-size:8px;color:var(--silverDim)}
+.phone__hero{padding:15px 13px 14px;background:linear-gradient(175deg,var(--hv8),transparent 70%)}
+.phone__hero b{display:block;font-family:var(--display);font-size:17px;line-height:.98;text-transform:uppercase;margin-bottom:7px}
+.phone__hero p{margin:0 0 11px;font-size:8.5px;color:var(--silver);line-height:1.5}
+.phone__btn{display:block;text-align:center;padding:7px;border-radius:5px;background:var(--hv);
+  color:#1A1200;font-size:8.5px;font-weight:700}
+.phone__rows{padding:11px 13px 15px;display:grid;gap:7px}
+.phone__row{height:7px;border-radius:3px;background:var(--deck2)}
+.phone__row:nth-child(2){width:82%}
+.phone__row:nth-child(3){width:64%}
+.phone__speed{display:flex;align-items:center;gap:6px;padding:8px 13px;border-top:1px solid var(--rail);
+  font-family:var(--mono);font-size:8px;color:var(--hv)}
+
+.feed{display:grid;gap:10px}
+.card{display:flex;gap:12px;padding:13px 14px;border-radius:11px;border:1px solid var(--rail);
+  background:linear-gradient(180deg,rgba(25,30,36,.92),rgba(20,24,29,.72));backdrop-filter:blur(10px);
+  box-shadow:0 18px 40px -26px #000;opacity:0;animation:pop 8s cubic-bezier(.2,.7,.3,1) infinite}
+.card:nth-child(1){animation-delay:.2s}
+.card:nth-child(2){animation-delay:1.9s}
+.card:nth-child(3){animation-delay:3.6s}
+.card:nth-child(4){animation-delay:5.3s}
+@keyframes pop{
+  0%{opacity:0;transform:translateY(14px) scale(.97)}
+  4%,84%{opacity:1;transform:none}
+  94%,100%{opacity:0;transform:translateY(-8px) scale(.99)}
+}
+.card__ic{width:32px;height:32px;border-radius:9px;flex:none;display:grid;place-items:center;
+  background:var(--hv8);border:1px solid var(--hv18);color:var(--hv)}
+.card__ic svg{width:15px;height:15px}
+.card--miss .card__ic{background:var(--leak10);border-color:var(--leak30);color:var(--leak)}
+.card b{display:block;font-size:13.5px;font-weight:600;margin-bottom:2px;letter-spacing:-.01em}
+.card p{margin:0;font-size:12.5px;color:var(--silver);line-height:1.45}
+.card time{display:block;margin-top:5px;font-family:var(--mono);font-size:9.5px;color:var(--silverDim);letter-spacing:.08em}
+
+/* ══════════════════════════ PROOF STRIP ══════════════════════════ */
+.strip{border-block:1px solid var(--rail);background:rgba(255,255,255,.012)}
+.strip__in{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rail);
+  border-inline:1px solid var(--rail)}
+.strip__cell{background:var(--void);padding:22px 20px}
+.strip__cell b{display:block;font-family:var(--display);font-size:clamp(26px,3.4vw,38px);
+  line-height:1;margin-bottom:6px}
+.strip__cell b em{font-style:normal;color:var(--hv)}
+.strip__cell span{color:var(--silverDim);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+
+/* ══════════════════════════ SECTION HEADS ══════════════════════════ */
+.head{max-width:64ch;margin-bottom:clamp(38px,4.6vw,58px)}
+.head h2{margin:0 0 16px;font-size:clamp(32px,5vw,60px)}
+.head h2 em{font-style:normal;color:var(--hv)}
+.head h2 u{text-decoration:none;color:var(--leak)}
+.head p{margin:0;color:var(--silver);font-size:clamp(15.5px,1.7vw,17.5px);max-width:56ch}
+
+/* ══════════════════════════ HARD TRUTH ══════════════════════════ */
+.truth{display:grid;grid-template-columns:1fr .85fr;gap:clamp(30px,4.5vw,60px);align-items:start}
+.truth__body p{margin:0 0 18px;color:var(--silver);font-size:16.5px}
+.truth__body p:last-child{margin-bottom:0}
+.truth__body strong{color:var(--chalk);font-weight:600}
+.pull{margin:26px 0;padding:22px 24px;border-left:3px solid var(--leak);background:var(--leak10);
+  border-radius:0 10px 10px 0}
+.pull p{margin:0;color:var(--chalk);font-size:18px;font-weight:500;line-height:1.45}
+
+.ledger{border:1px solid var(--rail);border-radius:13px;overflow:hidden;background:var(--deck)}
+.ledger__hd{padding:15px 18px;border-bottom:1px solid var(--rail);display:flex;
+  align-items:center;justify-content:space-between;gap:10px;background:rgba(255,77,77,.05)}
+.ledger__hd b{font-size:14px;font-weight:600}
+.ledger__hd span{color:var(--leak)}
+.ledger__row{display:flex;align-items:flex-start;gap:13px;padding:15px 18px;border-bottom:1px solid var(--rail)}
+.ledger__row:last-child{border-bottom:none}
+.ledger__row svg{width:16px;height:16px;flex:none;margin-top:3px;color:var(--leak)}
+.ledger__row b{display:block;font-size:14.5px;font-weight:600;margin-bottom:3px}
+.ledger__row p{margin:0;font-size:13.5px;color:var(--silver);line-height:1.45}
+
+/* ══════════════════════════ 4 PILLARS ══════════════════════════ */
+.pillars{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.pillar{position:relative;padding:clamp(24px,2.9vw,34px);border-radius:14px;border:1px solid var(--rail);
+  background:linear-gradient(180deg,rgba(25,30,36,.7),rgba(20,24,29,.42));backdrop-filter:blur(10px);
+  transition:border-color .25s,transform .25s}
+.pillar:hover{border-color:var(--hv35);transform:translateY(-3px)}
+.pillar__top{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.pillar__n{font-family:var(--mono);font-weight:700;font-size:11px;letter-spacing:.14em;color:var(--hv)}
+.pillar__ln{flex:1;height:1px;background:var(--rail)}
+.pillar__tag{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--silverDim)}
+.pillar__ic{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;margin-bottom:20px;
+  background:var(--hv8);border:1px solid var(--hv18);color:var(--hv)}
+.pillar__ic svg{width:21px;height:21px}
+.pillar h3{margin:0 0 12px;font-family:var(--display);font-size:clamp(22px,2.5vw,29px);
+  line-height:1;text-transform:uppercase;letter-spacing:-.005em}
+.pillar > p{margin:0 0 20px;color:var(--silver);font-size:15px}
+.pillar ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.pillar li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--silver)}
+.pillar li svg{width:14px;height:14px;flex:none;margin-top:4px;color:var(--hv)}
+.pillar--free{border-color:var(--hv35);background:linear-gradient(155deg,rgba(255,194,51,.08),rgba(20,24,29,.5) 58%)}
+.ribbon{position:absolute;top:clamp(24px,2.9vw,34px);right:clamp(24px,2.9vw,34px);
+  padding:5px 11px;border-radius:999px;background:var(--hv);color:#1A1200;
+  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em}
+
+/* ══════════════════════════ PARTNERSHIP ══════════════════════════ */
+.deal{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--rail);
+  border-radius:14px;overflow:hidden}
+.deal__col{padding:clamp(26px,3vw,36px);background:var(--deck);border-right:1px solid var(--rail);transition:background .3s}
+.deal__col:last-child{border-right:none}
+.deal__col:hover{background:var(--deck2)}
+.deal__col h3{margin:0 0 12px;font-family:var(--display);font-size:clamp(19px,2.1vw,24px);
+  text-transform:uppercase;line-height:1.02}
+.deal__col p{margin:0;color:var(--silver);font-size:15px}
+.deal__ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;margin-bottom:20px;
+  background:var(--hv8);border:1px solid var(--hv18);color:var(--hv)}
+.deal__ic svg{width:18px;height:18px}
+.deal__note{margin-top:22px;padding:18px 22px;border:1px dashed var(--railHi);border-radius:12px;
+  display:flex;gap:13px;align-items:flex-start;color:var(--silver);font-size:14.5px}
+.deal__note svg{width:17px;height:17px;flex:none;margin-top:3px;color:var(--hv)}
+.deal__note b{color:var(--chalk);font-weight:600}
+
+/* ══════════════════════════ SIGNATURE: LEAK CALCULATOR ══════════════════════════ */
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rail);
+  border-radius:16px;overflow:hidden;background:var(--deck)}
+.calc__in{padding:clamp(26px,3.2vw,38px);border-right:1px solid var(--rail)}
+.calc__out{padding:clamp(26px,3.2vw,38px);background:linear-gradient(165deg,rgba(255,77,77,.07),rgba(13,15,18,.5) 60%);
+  display:flex;flex-direction:column;transition:background .5s}
+.calc.plugged .calc__out{background:linear-gradient(165deg,rgba(255,194,51,.1),rgba(13,15,18,.5) 60%)}
+
+.ctl{margin-bottom:26px}
+.ctl__hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.ctl__hd label{color:var(--silver);font-size:14px}
+.ctl__hd output{font-family:var(--display);font-size:26px;line-height:1;color:var(--hv)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;
+  background:var(--rail);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+  background:var(--hv);border:3px solid var(--void);cursor:grab;box-shadow:0 0 0 1px var(--hv);transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--hv);
+  border:3px solid var(--void);cursor:grab;box-shadow:0 0 0 1px var(--hv)}
+.ctl__scale{display:flex;justify-content:space-between;margin-top:8px;color:var(--silverDim);
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em}
+
+.toggle{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:11px;
+  border:1px solid var(--rail);background:var(--deck2);cursor:pointer;transition:border-color .25s;width:100%;text-align:left}
+.toggle:hover{border-color:var(--railHi)}
+.calc.plugged .toggle{border-color:var(--hv35);background:var(--hv8)}
+.switch{width:44px;height:24px;border-radius:999px;background:var(--rail);flex:none;position:relative;transition:background .3s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;
+  background:var(--silver);transition:transform .3s cubic-bezier(.2,.7,.3,1),background .3s}
+.calc.plugged .switch{background:var(--gold)}
+.calc.plugged .switch::after{transform:translateX(20px);background:#1A1200}
+.toggle b{display:block;font-size:14.5px;font-weight:600;margin-bottom:2px}
+.toggle span{display:block;font-size:13px;color:var(--silver)}
+
+.bucket{display:grid;place-items:center;margin-bottom:8px}
+.bucket svg{width:100%;max-width:190px;height:auto}
+.drip{opacity:1;transition:opacity .4s}
+.calc.plugged .drip{opacity:0}
+.drip circle{animation:fall 1.5s linear infinite}
+.drip circle:nth-child(2){animation-delay:.5s}
+.drip circle:nth-child(3){animation-delay:1s}
+@keyframes fall{0%{transform:translateY(0);opacity:1}100%{transform:translateY(34px);opacity:0}}
+.hole{fill:var(--leak);transition:fill .4s}
+.calc.plugged .hole{fill:var(--hv)}
+.fill{transition:y .6s cubic-bezier(.2,.7,.3,1),height .6s cubic-bezier(.2,.7,.3,1),fill .5s}
+
+.tally{margin-top:auto;padding-top:24px;border-top:1px solid var(--rail)}
+.tally__k{color:var(--silverDim);margin-bottom:8px}
+.tally__v{font-family:var(--display);font-size:clamp(40px,6vw,64px);line-height:1;color:var(--leak);
+  letter-spacing:-.02em;transition:color .4s}
+.calc.plugged .tally__v{color:var(--hv)}
+.tally__sub{margin:12px 0 0;color:var(--silver);font-size:14px}
+.tally__sub b{color:var(--chalk);font-weight:600}
+.calc__fine{margin:16px 0 0;color:var(--silverDim);font-size:12px;line-height:1.5}
+
+/* ══════════════════════════ FINAL CTA ══════════════════════════ */
+.final{overflow:hidden}
+.final__glow{position:absolute;bottom:-360px;left:50%;transform:translateX(-50%);
+  width:min(980px,130vw);height:620px;pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 50%,var(--hv18),transparent 70%);filter:blur(20px)}
+.final__grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,70px);align-items:center}
+.final h2{margin:0 0 18px;font-size:clamp(33px,5vw,58px)}
+.final h2 em{font-style:normal;color:var(--hv)}
+.final__copy > p{margin:0 0 26px;color:var(--silver);font-size:17px;max-width:42ch}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.checks li{display:flex;gap:11px;align-items:flex-start;font-size:15px;color:var(--silver)}
+.checks li svg{width:16px;height:16px;color:var(--hv);flex:none;margin-top:4px}
+
+.form{padding:clamp(24px,3vw,34px);border-radius:16px;border:1px solid var(--rail);
+  background:linear-gradient(180deg,rgba(25,30,36,.92),rgba(20,24,29,.74));backdrop-filter:blur(12px);
+  box-shadow:0 40px 90px -50px #000}
+.form__hd{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;
+  padding-bottom:16px;border-bottom:1px solid var(--rail)}
+.form__hd b{font-size:15.5px;font-weight:600}
+.form__hd span{color:var(--hv)}
+.field{margin-bottom:14px}
+.field label{display:block;margin-bottom:7px;color:var(--silver);font-family:var(--mono);
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.field input,.field select{width:100%;padding:13px 14px;border-radius:8px;background:var(--void);
+  border:1px solid var(--rail);font-size:14.5px;transition:border-color .2s,background .2s}
+.field input::placeholder{color:var(--silverDim)}
+.field input:focus,.field select:focus{border-color:var(--hv);outline:none;background:#0A0C0F}
+.field select{appearance:none;cursor:pointer;padding-right:38px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238D97A3' stroke-width='2.5' stroke-linecap='round'><path d='m6 9 6 6 6-6'/></svg>");
+  background-repeat:no-repeat;background-position:right 13px center}
+.form__fine{margin:14px 0 0;color:var(--silverDim);font-size:12.5px;text-align:center}
+.form__done{display:none;text-align:center;padding:36px 8px}
+.form__done svg{width:42px;height:42px;color:var(--hv);margin:0 auto 16px}
+.form__done b{display:block;font-family:var(--display);font-size:24px;text-transform:uppercase;margin-bottom:10px}
+.form__done p{margin:0;color:var(--silver);font-size:14.5px}
+.sent .form__body{display:none}
+.sent .form__done{display:block}
+
+/* ══════════════════════════ FOOTER ══════════════════════════ */
+.foot{border-top:1px solid var(--rail);padding-block:54px 28px}
+.foot__grid{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:36px;margin-bottom:42px}
+.foot__brand p{margin:16px 0 0;color:var(--silverDim);font-size:14px;max-width:32ch}
+.foot h4{margin:0 0 15px;color:var(--silverDim);font-family:var(--mono);font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;font-weight:400}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+.foot ul a{color:var(--silver);font-size:14px;transition:color .2s}
+.foot ul a:hover{color:var(--hv)}
+.foot__bar{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:24px;
+  border-top:1px solid var(--rail);color:var(--silverDim);font-size:13px}
+.foot__bar div{display:flex;gap:20px;flex-wrap:wrap}
+.foot__bar a:hover{color:var(--chalk)}
+
+/* ══════════════════════════ REVEAL ══════════════════════════ */
+.rv{opacity:0;transform:translateY(20px);
+  transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+/* ══════════════════════════ RESPONSIVE ══════════════════════════ */
+@media (max-width:1000px){
+  .nav__links{display:none}
+  .hero__grid,.truth,.calc,.final__grid{grid-template-columns:1fr}
+  .stage{margin-top:8px}
+  .calc__in{border-right:none;border-bottom:1px solid var(--rail)}
+  .deal{grid-template-columns:1fr}
+  .deal__col{border-right:none;border-bottom:1px solid var(--rail)}
+  .deal__col:last-child{border-bottom:none}
+  .strip__in{grid-template-columns:repeat(2,1fr)}
+  .foot__grid{grid-template-columns:1fr 1fr}
+  .foot__brand{grid-column:1/-1}
+}
+@media (max-width:700px){
+  .pillars{grid-template-columns:1fr}
+  .stage{grid-template-columns:1fr;gap:22px}
+  .phone{justify-self:center}
+  .hero__cta .btn{flex:1 1 100%}
+  .ribbon{position:static;display:inline-block;margin-bottom:14px}
+}
+@media (max-width:460px){
+  .strip__in{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important}
+  .rv{opacity:1;transform:none}
+  .card{opacity:1;animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ NAV ══════════ -->
+<header class="nav" id="nav">
+  <div class="nav__in">
+    <a href="#top" class="logo" aria-label="RocaRev home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M3 17.5 12 3l9 14.5" stroke="#FFC233" stroke-width="2.3" stroke-linejoin="round"/>
+        <path d="M7.5 21h9" stroke="#FFC233" stroke-width="2.3" stroke-linecap="round"/>
+      </svg>
+      Roca<em>Rev</em>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#truth">The problem</a>
+      <a href="#pillars">The 4 pillars</a>
+      <a href="#deal">Why free</a>
+      <a href="#calculator">Leak calculator</a>
+    </nav>
+    <a href="#claim" class="btn btn--go btn--sm">Claim your free website</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="shell hero__grid">
+
+    <div>
+      <span class="flag mn rv"><i aria-hidden="true"></i> Now booking builds — 4 slots this month</span>
+
+      <h1 class="dsp rv" style="transition-delay:.05s">
+        Your new website costs <s>$3,000</s> <em>$0.</em>
+      </h1>
+
+      <p class="hero__sub rv" style="transition-delay:.1s">
+        Most agencies charge thousands for a digital business card that brings in zero sales.
+        <b>We build yours free</b> — because a website is only step one of a real revenue engine,
+        and we'd rather prove that than pitch it.
+      </p>
+
+      <div class="hero__cta rv" style="transition-delay:.15s">
+        <a href="#claim" class="btn btn--go">
+          Claim your free website
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#deal" class="btn btn--out">How our partnership works</a>
+      </div>
+
+      <p class="hero__fine rv" style="transition-delay:.2s">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> No setup fee</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> No contract to sign</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Live in 7 days</span>
+      </p>
+    </div>
+
+    <!-- hero visual -->
+    <div class="stage rv" style="transition-delay:.25s" role="img"
+         aria-label="A fast mobile site alongside a live feed: missed call detected, instant text sent, appointment booked, review request sent.">
+
+      <div class="phone">
+        <div class="phone__scr">
+          <div class="phone__bar"><span>9:41</span><span>rocarev.build</span></div>
+          <div class="phone__hero">
+            <b>Emergency plumbing, 24/7</b>
+            <p>Licensed, insured, and on your street in under 40 minutes.</p>
+            <span class="phone__btn">Call now</span>
+          </div>
+          <div class="phone__rows">
+            <div class="phone__row"></div><div class="phone__row"></div><div class="phone__row"></div>
+          </div>
+          <div class="phone__speed">
+            <svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 9-12h-7Z"/></svg>
+            Loaded in 0.7s
+          </div>
+        </div>
+      </div>
+
+      <div class="feed">
+        <article class="card card--miss">
+          <span class="card__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.4 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"/><path d="m2 2 20 20"/></svg></span>
+          <div><b>Missed call — you're on a job</b><p>+1 (512) 555-0148 · rang 6 times</p><time>0s</time></div>
+        </article>
+
+        <article class="card">
+          <span class="card__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg></span>
+          <div><b>Text sent automatically</b><p>"Sorry we missed you — this is Dave at Ridgeline. What do you need done?"</p><time>+18 seconds</time></div>
+        </article>
+
+        <article class="card">
+          <span class="card__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18M9 16l2 2 4-4"/></svg></span>
+          <div><b>Appointment booked</b><p>Tomorrow, 8:30am — burst pipe, quoted $480</p><time>+4 minutes</time></div>
+        </article>
+
+        <article class="card">
+          <span class="card__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.6 5.6 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.4l6-.8Z"/></svg></span>
+          <div><b>Review request sent</b><p>Google 5★ posted — you're now #2 for "plumber near me"</p><time>Next day</time></div>
+        </article>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ STAT STRIP ══════════ -->
+<section class="strip">
+  <div class="shell" style="padding-inline:0">
+    <div class="strip__in">
+      <div class="strip__cell"><b><em>$0</em></b><span>Upfront build cost</span></div>
+      <div class="strip__cell"><b>7 <em>days</em></b><span>Average time to live</span></div>
+      <div class="strip__cell"><b>&lt;60<em>s</em></b><span>Missed-call reply time</span></div>
+      <div class="strip__cell"><b>24/<em>7</em></b><span>Chatbot on duty</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ HARD TRUTH ══════════ -->
+<section class="band" id="truth">
+  <div class="shell">
+    <div class="head rv">
+      <p class="mn eyebrow is-leak">The hard truth</p>
+      <h2 class="dsp">Why a <u>$5,000 website</u> is wasting your money.</h2>
+      <p>Nobody wants to hear this from the people building websites. We'll say it anyway.</p>
+    </div>
+
+    <div class="truth">
+      <div class="truth__body rv">
+        <p>A marketing firm sells you a site. They show you mockups, you pick a colour, they launch it, they invoice you, and they walk away. Everyone shakes hands. <strong>Then nothing happens.</strong></p>
+
+        <p>Because here's what a website actually does: it convinces a stranger to contact you. That's it. That's the whole job. The site did its part the second that person picked up the phone.</p>
+
+        <div class="pull">
+          <p>You were under a sink with both hands wet. The phone rang out. They called the next name on the list — and that name answered.</p>
+        </div>
+
+        <p>That call was the return on your $5,000. And it went to a competitor with a worse website and a better system.</p>
+
+        <p><strong>A website without capture, nurture and trust attached to it is a brochure in a desert.</strong> Beautifully printed. Nobody around to read it. And the agency that sold it to you has no reason to care, because they already got paid.</p>
+
+        <p>We built our entire model around the opposite bet: the site is free, and we only matter if the phone turns into work.</p>
+      </div>
+
+      <aside class="ledger rv" style="transition-delay:.1s">
+        <div class="ledger__hd">
+          <b>What the pretty website didn't do</b>
+          <span class="mn">4 failures</span>
+        </div>
+        <div class="ledger__row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+          <div><b>It didn't answer at 6:40pm</b><p>Roughly 2 in 5 service calls come outside business hours. Nobody was there.</p></div>
+        </div>
+        <div class="ledger__row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+          <div><b>It didn't follow up on the missed call</b><p>No text, no callback, no record it ever happened. The lead evaporated silently.</p></div>
+        </div>
+        <div class="ledger__row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+          <div><b>It didn't talk to the 97% who just browsed</b><p>They read two paragraphs, didn't call, and closed the tab. Gone, unrecorded.</p></div>
+        </div>
+        <div class="ledger__row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+          <div><b>It didn't ask for a single review</b><p>Nine happy customers, zero stars added. Your competitor asked. That's the only difference.</p></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 4 PILLARS ══════════ -->
+<section class="band hair" id="pillars">
+  <div class="shell">
+    <div class="head rv">
+      <p class="mn eyebrow">The 4-pillar revenue architecture</p>
+      <h2 class="dsp">The website is the <em>floor.</em> Not the building.</h2>
+      <p>Four systems, stacked in order. Each one is worthless without the one under it — which is exactly why we don't sell them separately.</p>
+    </div>
+
+    <div class="pillars">
+
+      <article class="pillar pillar--free rv">
+        <span class="ribbon">$0 — ON US</span>
+        <div class="pillar__top">
+          <span class="pillar__n">PILLAR 01</span><i class="pillar__ln" aria-hidden="true"></i>
+          <span class="pillar__tag">Presence</span>
+        </div>
+        <div class="pillar__ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="15" rx="2"/><path d="M2 9h20M8 23h8"/></svg>
+        </div>
+        <h3>Your free custom website</h3>
+        <p>Not a template with your logo dropped in. A custom build, written to convert, that loads before the thumb stops scrolling.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Sub-second load times on mobile data</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Secure hosting and SSL included, handled by us</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Written around one action: get them to call you</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Live in 7 days, not 7 weeks of revisions</span></li>
+        </ul>
+      </article>
+
+      <article class="pillar rv" style="transition-delay:.06s">
+        <div class="pillar__top">
+          <span class="pillar__n">PILLAR 02</span><i class="pillar__ln" aria-hidden="true"></i>
+          <span class="pillar__tag">Capture</span>
+        </div>
+        <div class="pillar__ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg>
+        </div>
+        <h3>Missed-call text-back</h3>
+        <p>The phone rings out, and before they've dialled the next company, their phone buzzes with a message from you.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Automatic SMS within 60 seconds of any missed call</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>They reply by text — you answer between jobs, not during</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Every conversation logged, so nothing gets forgotten</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Uses your existing number — nothing changes for callers</span></li>
+        </ul>
+      </article>
+
+      <article class="pillar rv" style="transition-delay:.12s">
+        <div class="pillar__top">
+          <span class="pillar__n">PILLAR 03</span><i class="pillar__ln" aria-hidden="true"></i>
+          <span class="pillar__tag">Nurture</span>
+        </div>
+        <div class="pillar__ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 8V4M9 14h.01M15 14h.01M2 13h2M20 13h2"/></svg>
+        </div>
+        <h3>Smart AI chatbot</h3>
+        <p>Most visitors won't call a stranger. They'll type a question. The bot answers it, qualifies them, and puts the job on your calendar.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Trained on your services, pricing and coverage area</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Books appointments straight into your calendar</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Hands off to you the moment something needs a human</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Working at 11pm Sunday, when you're asleep</span></li>
+        </ul>
+      </article>
+
+      <article class="pillar rv" style="transition-delay:.18s">
+        <div class="pillar__top">
+          <span class="pillar__n">PILLAR 04</span><i class="pillar__ln" aria-hidden="true"></i>
+          <span class="pillar__tag">Trust</span>
+        </div>
+        <div class="pillar__ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.6 5.6 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.4l6-.8Z"/></svg>
+        </div>
+        <h3>Review autopilot</h3>
+        <p>You do good work. Your competitor does average work and has 84 reviews. Guess who Google shows first.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Request fires automatically a few hours after the job</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Unhappy customers routed to you privately first</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Steady review flow feeds your Google Business ranking</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>You never have to awkwardly ask again</span></li>
+        </ul>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PARTNERSHIP ══════════ -->
+<section class="band hair" id="deal">
+  <div class="shell">
+    <div class="head rv">
+      <p class="mn eyebrow">The partnership model</p>
+      <h2 class="dsp">We win when your <em>business grows.</em></h2>
+      <p>Free work makes people suspicious, and it should. So here's the whole arrangement, in plain terms.</p>
+    </div>
+
+    <div class="deal rv">
+      <div class="deal__col">
+        <div class="deal__ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M17 6.5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>We front the build</h3>
+        <p>The site costs us real hours. We absorb that, because it's the fastest way to show you what we're actually good at — instead of asking you to gamble a few thousand dollars on a proposal document.</p>
+      </div>
+      <div class="deal__col">
+        <div class="deal__ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17.5 9 11l4 4 8-8"/><path d="M15 7h6v6"/></svg>
+        </div>
+        <h3>You run it and judge it</h3>
+        <p>Live site, no invoice, no obligation. If it brings you nothing, you owe us nothing and you keep the site. That's the risk we're carrying, and we're comfortable carrying it.</p>
+      </div>
+      <div class="deal__col">
+        <div class="deal__ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>
+        </div>
+        <h3>Then we build the engine</h3>
+        <p>When you want the other three pillars switched on, that's a monthly partnership — capture, nurture and trust running for you. Priced so it pays for itself, or it isn't worth either of our time.</p>
+      </div>
+    </div>
+
+    <div class="deal__note rv" style="transition-delay:.08s">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.4 8.5 8 9.5 4.6-1 8-4.5 8-9.5V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+      <span><b>The honest catch:</b> we can only do this for a handful of businesses a month, and we're selective about who. We build for owners who answer their phone, do good work, and are losing money on the admin around it. If that's not you, we'll tell you on the first call and save us both the time.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SIGNATURE: LEAK CALCULATOR ══════════ -->
+<section class="band hair" id="calculator">
+  <div class="shell">
+    <div class="head rv">
+      <p class="mn eyebrow is-leak">The leaking bucket</p>
+      <h2 class="dsp">You're not short on leads. You're <u>losing them.</u></h2>
+      <p>Move the sliders to your numbers. This is the money walking out the door every month before you spend another cent on marketing.</p>
+    </div>
+
+    <div class="calc rv" id="calc">
+
+      <div class="calc__in">
+        <div class="ctl">
+          <div class="ctl__hd">
+            <label for="s-calls">Calls you miss in a normal week</label>
+            <output id="o-calls" for="s-calls">8</output>
+          </div>
+          <input id="s-calls" type="range" min="1" max="30" value="8" step="1">
+          <div class="ctl__scale"><span>1</span><span>30</span></div>
+        </div>
+
+        <div class="ctl">
+          <div class="ctl__hd">
+            <label for="s-value">Average value of one job</label>
+            <output id="o-value" for="s-value">$450</output>
+          </div>
+          <input id="s-value" type="range" min="50" max="5000" value="450" step="50">
+          <div class="ctl__scale"><span>$50</span><span>$5,000</span></div>
+        </div>
+
+        <div class="ctl">
+          <div class="ctl__hd">
+            <label for="s-close">Jobs you'd win if you actually spoke to them</label>
+            <output id="o-close" for="s-close">40%</output>
+          </div>
+          <input id="s-close" type="range" min="10" max="80" value="40" step="5">
+          <div class="ctl__scale"><span>10%</span><span>80%</span></div>
+        </div>
+
+        <button type="button" class="toggle" id="plug" aria-pressed="false">
+          <span class="switch" aria-hidden="true"></span>
+          <span>
+            <b>Plug the leaks with RocaRev</b>
+            <span>Text-back, chatbot and review engine switched on</span>
+          </span>
+        </button>
+
+        <p class="calc__fine">Assumes the 4-pillar stack recovers roughly two thirds of missed enquiries — the figure we hold ourselves to on live accounts. Your audit uses your real call logs, not this estimate.</p>
+      </div>
+
+      <div class="calc__out">
+        <div class="bucket" aria-hidden="true">
+          <svg viewBox="0 0 160 150">
+            <defs>
+              <clipPath id="bk"><path d="M34 40h92l-11 78a10 10 0 0 1-10 8H55a10 10 0 0 1-10-8Z"/></clipPath>
+            </defs>
+            <g clip-path="url(#bk)">
+              <rect class="fill" id="water" x="30" y="70" width="100" height="60" fill="#FF4D4D" opacity=".28"/>
+            </g>
+            <path d="M34 40h92l-11 78a10 10 0 0 1-10 8H55a10 10 0 0 1-10-8Z" fill="none" stroke="#333D49" stroke-width="3"/>
+            <rect x="28" y="32" width="104" height="10" rx="5" fill="#333D49"/>
+            <circle class="hole" cx="60" cy="92" r="4"/>
+            <circle class="hole" cx="84" cy="108" r="4"/>
+            <circle class="hole" cx="104" cy="80" r="4"/>
+            <g class="drip" fill="#FF4D4D">
+              <circle cx="60" cy="99" r="2.6"/>
+              <circle cx="84" cy="115" r="2.6"/>
+              <circle cx="104" cy="87" r="2.6"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="tally">
+          <p class="mn tally__k" id="tallyKey">Leaking out every month</p>
+          <div class="tally__v" id="tallyVal">$6,240</div>
+          <p class="tally__sub" id="tallySub">That's <b>$74,880 a year</b> going to whoever answered instead of you.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FINAL CTA ══════════ -->
+<section class="band final" id="claim">
+  <div class="final__glow" aria-hidden="true"></div>
+  <div class="shell final__grid">
+
+    <div class="final__copy rv">
+      <p class="mn eyebrow">Claim your build slot</p>
+      <h2 class="dsp">Stop letting leads slip through the cracks. Get your <em>free site</em> today.</h2>
+      <p>Four questions. If you're a fit, we start the build this week and it's live inside seven days.</p>
+      <ul class="checks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>$0 upfront, no card, no contract, no lock-in.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>One 20-minute call to gather what we need. Then we build.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Keep the site whether or not you take the partnership.</span></li>
+      </ul>
+    </div>
+
+    <div class="form rv" id="formCard" style="transition-delay:.08s">
+      <div class="form__hd">
+        <b>Free website application</b>
+        <span class="mn">4 slots left</span>
+      </div>
+
+      <form class="form__body" id="claimForm" novalidate>
+        <div class="field">
+          <label for="f-name">Your name</label>
+          <input id="f-name" type="text" placeholder="Dave Ruiz" required>
+        </div>
+        <div class="field">
+          <label for="f-biz">Business name</label>
+          <input id="f-biz" type="text" placeholder="Ridgeline Plumbing" required>
+        </div>
+        <div class="field">
+          <label for="f-phone">Phone number</label>
+          <input id="f-phone" type="tel" placeholder="(512) 555-0148" required>
+        </div>
+        <div class="field">
+          <label for="f-status">Where you're at right now</label>
+          <select id="f-status" required>
+            <option value="" selected disabled>Select one</option>
+            <option>No website, no Google Business Profile</option>
+            <option>Google Business Profile only, no website</option>
+            <option>Old website I'm embarrassed by</option>
+            <option>Decent website, but the phone still gets missed</option>
+            <option>Someone built me one and vanished</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn--go btn--wide">
+          Claim your free website
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="form__fine">We reply within one business day. No sales sequence, no drip emails.</p>
+      </form>
+
+      <div class="form__done" role="status">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5 11 15l4.5-5"/></svg>
+        <b>Slot requested</b>
+        <p>We'll call you within one business day to confirm the fit and book your 20-minute build call.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="foot">
+  <div class="shell">
+    <div class="foot__grid">
+      <div class="foot__brand">
+        <a href="#top" class="logo">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 17.5 12 3l9 14.5" stroke="#FFC233" stroke-width="2.3" stroke-linejoin="round"/>
+            <path d="M7.5 21h9" stroke="#FFC233" stroke-width="2.3" stroke-linecap="round"/>
+          </svg>
+          Roca<em>Rev</em>
+        </a>
+        <p>Solid foundation. Real revenue. We build the website free and the engine behind it properly.</p>
+      </div>
+      <div>
+        <h4>The stack</h4>
+        <ul>
+          <li><a href="#pillars">Free custom website</a></li>
+          <li><a href="#pillars">Missed-call text-back</a></li>
+          <li><a href="#pillars">AI chatbot</a></li>
+          <li><a href="#pillars">Review autopilot</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#truth">Why we do this</a></li>
+          <li><a href="#deal">Partnership model</a></li>
+          <li><a href="#calculator">Leak calculator</a></li>
+          <li><a href="mailto:hello@rocarev.com">hello@rocarev.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Terms of service</a></li>
+          <li><a href="#">Free build terms</a></li>
+          <li><a href="#">Cookie preferences</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot__bar">
+      <span>© <span id="yr">2026</span> RocaRev. All rights reserved.</span>
+      <div><a href="#claim">Claim your free website</a><a href="mailto:hello@rocarev.com">hello@rocarev.com</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  /* sticky nav */
+  var nav = document.getElementById('nav');
+  var onScroll = function(){ nav.classList.toggle('stuck', scrollY > 12); };
+  onScroll(); addEventListener('scroll', onScroll, {passive:true});
+
+  /* reveal */
+  var items = document.querySelectorAll('.rv');
+  if (reduce || !('IntersectionObserver' in window)) {
+    items.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:.12, rootMargin:'0px 0px -60px 0px'});
+    items.forEach(function(el){ io.observe(el); });
+  }
+
+  /* ── leak calculator ── */
+  var calc  = document.getElementById('calc');
+  var sCalls= document.getElementById('s-calls');
+  var sVal  = document.getElementById('s-value');
+  var sClose= document.getElementById('s-close');
+  var oCalls= document.getElementById('o-calls');
+  var oVal  = document.getElementById('o-value');
+  var oClose= document.getElementById('o-close');
+  var plug  = document.getElementById('plug');
+  var water = document.getElementById('water');
+  var tKey  = document.getElementById('tallyKey');
+  var tVal  = document.getElementById('tallyVal');
+  var tSub  = document.getElementById('tallySub');
+  var RECOVERY = 0.66;
+
+  var money = function(n){
+    return '$' + Math.round(n).toLocaleString('en-US');
+  };
+
+  function render(){
+    var calls = +sCalls.value, val = +sVal.value, close = +sClose.value/100;
+    var monthlyLoss = calls * 4.33 * val * close;
+    var recovered   = monthlyLoss * RECOVERY;
+    var on = calc.classList.contains('plugged');
+
+    oCalls.textContent = calls;
+    oVal.textContent   = money(val);
+    oClose.textContent = Math.round(close*100) + '%';
+
+    if (on) {
+      tKey.textContent = 'Recovered every month';
+      tVal.textContent = money(recovered);
+      tSub.innerHTML   = 'Roughly <b>' + money(recovered*12) + ' a year</b> that was already yours — you just never got to the phone.';
+      water.setAttribute('fill', '#FFC233');
+      water.setAttribute('y', 58); water.setAttribute('height', 80);
+    } else {
+      tKey.textContent = 'Leaking out every month';
+      tVal.textContent = money(monthlyLoss);
+      tSub.innerHTML   = "That's <b>" + money(monthlyLoss*12) + ' a year</b> going to whoever answered instead of you.';
+      water.setAttribute('fill', '#FF4D4D');
+      water.setAttribute('y', 86); water.setAttribute('height', 52);
+    }
+  }
+
+  [sCalls, sVal, sClose].forEach(function(el){ el.addEventListener('input', render); });
+  plug.addEventListener('click', function(){
+    var on = calc.classList.toggle('plugged');
+    plug.setAttribute('aria-pressed', on ? 'true' : 'false');
+    render();
+  });
+  render();
+
+  /* form */
+  var form = document.getElementById('claimForm');
+  var card = document.getElementById('formCard');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var req = form.querySelectorAll('[required]');
+    for (var i=0;i<req.length;i++){ if(!req[i].value){ req[i].focus(); return; } }
+    card.classList.add('sent');
+  });
+})();
+</script>
+</body>
+</html>
