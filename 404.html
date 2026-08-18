@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found — RocaRev</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<style>
+  *,::before,::after { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh;
+    display: grid; place-items: center; padding: 24px;
+    background: #0D0F12; color: #F0F3F6;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 34rem; text-align: center; }
+  .mark { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 32px;
+    font-family: 'Anton', Impact, sans-serif; font-size: 22px; text-transform: uppercase; }
+  .mark span { color: #FFC233; }
+  h1 { font-family: 'Anton', Impact, sans-serif; font-weight: 400; text-transform: uppercase;
+    font-size: clamp(38px, 9vw, 60px); line-height: .96; margin: 0 0 20px; }
+  h1 em { font-style: normal; color: #FFC233; }
+  p { font-size: 17px; line-height: 1.6; color: #8D97A3; margin: 0 0 32px; }
+  a.btn { display: inline-flex; align-items: center; gap: 8px; padding: 15px 26px;
+    border-radius: 8px; background: #FFC233; color: #1A1200; font-weight: 600;
+    font-size: 16px; text-decoration: none; }
+  a.btn:hover { background: #FFD264; }
+  a.btn:focus-visible { outline: 2px solid #FFC233; outline-offset: 3px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="mark">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" role="img" aria-label="RocaRev logo mark">
+        <path d="M3 17.5 12 3l9 14.5" stroke="#FFC233" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M7.5 21h9" stroke="#FFC233" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+      Roca<span>Rev</span>
+    </div>
+    <h1>This page <em>doesn't exist.</em></h1>
+    <p>Wrong link, or something moved. Either way, the audit is still free.</p>
+    <a class="btn" id="home-link" href="../">Back to the homepage</a>
+  </div>
+  <script>
+    // GitHub Pages serves this file for any unmatched URL under the project,
+    // so a plain "/" or "../" link can't reliably find the site root at every
+    // possible depth. This works it out from the actual URL in the address bar:
+    // on a project page (username.github.io/repo-name/...), the first path
+    // segment is the repo name, so home is "/repo-name/". On a user/custom
+    // domain site (root deploy), home is just "/".
+    (function () {
+      var parts = location.pathname.split('/').filter(Boolean);
+      var base = parts.length ? '/' + parts[0] + '/' : '/';
+      document.getElementById('home-link').href = base;
+    })();
+  </script>
+</body>
+</html>
